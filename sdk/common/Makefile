@@ -5,9 +5,15 @@
 #
 # Include configurations of EV3RT SDK
 #
-SDKDIR = ..
-WSPDIR = $(basename $(PWD))
-include $(SDKDIR)/Makefile.sdk.conf
+
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+EV3RT_BASE_DIR := $(patsubst %/sdk/common/Makefile,%,$(mkfile_path))
+export EV3RT_BASE_DIR
+
+SDKDIR              = $(EV3RT_BASE_DIR)/sdk
+WSPDIR              = $(EV3RT_BASE_DIR)/sdk/workspace
+EV3RT_PRJ_OBJ_DIR   = $(EV3RT_BASE_DIR)/sdk/OBJ/
+EV3RT_LIBKERNEL_DIR = $(EV3RT_BASE_DIR)/sdk/common/library/
 
 # Configuration
 SRCLANG := c
@@ -21,16 +27,13 @@ get_relpath = $(shell perl -MFile::Spec -e "print File::Spec->abs2rel(q($1),q($2
 #
 # Paths
 #
-KERNELDIR    := $(PWD)/$(SDKDIR)/$(EV3RT_BASE_DIR)
-OBJDIR       := $(PWD)/$(SDKDIR)/$(EV3RT_PRJ_OBJ_DIR)
-LIBKERNELDIR := $(PWD)/$(SDKDIR)/$(EV3RT_LIBKERNEL_DIR)
-TARGETDIR    := $(PWD)/$(KERNELDIR)/target/ev3_gcc
+KERNELDIR    := $(EV3RT_BASE_DIR)
+OBJDIR       := $(EV3RT_PRJ_OBJ_DIR)
+LIBKERNELDIR := $(EV3RT_LIBKERNEL_DIR)
+TARGETDIR    := $(EV3RT_BASE_DIR)/target/ev3_gcc
 
 # Object files
 OBJFILENAME := $(KERNEL)
-ifneq (, $(findstring CYGWIN, $(shell uname)))
-    OBJFILENAME := $(OBJFILENAME).exe
-endif
 OBJBINARY := $(OBJDIR)/$(KERNEL).bin
 
 #
@@ -41,12 +44,12 @@ OBJBINARY := $(OBJDIR)/$(KERNEL).bin
 # $(MKFILE_DIR):      Absolute path of the folder holding Makefile
 #
 ifdef img
-APPLDIR := $(PWD)/$(img)
-MKFILENAME := Makefile.img
+APPLDIR := $(WSPDIR)/$(img)
+MKFILENAME := img.mk
 endif
 ifdef app
-APPLDIR := $(PWD)/$(app)
-MKFILENAME := Makefile.app
+APPLDIR := $(WSPDIR)/$(app)
+MKFILENAME := app.mk
 endif
 MKFILE_DIR := $(APPLDIR)
 ifeq (,$(wildcard $(mkfile_dir)/$(MKFILENAME)))
@@ -74,9 +77,9 @@ endif
 	    $(OBJFILENAME) $(call get_relpath,$(OBJBINARY),$(OBJDIR))
 	@mkimage -A arm -O linux -T kernel -C none -a 0xc0008000 -e 0xc0008000 \
         -n "TOPPERS/$(KERNEL) Kernel (EV3)" \
-		-d $(call get_relpath,$(OBJBINARY),$(PWD)) uImage
+		-d $(call get_relpath,$(OBJBINARY),$(WSPDIR)) uImage
 	@chmod +x uImage
-	@cp $(OBJDIR)/$(OBJFILENAME) $(PWD)
+	@cp $(OBJDIR)/$(OBJFILENAME) $(WSPDIR)
 
 $(LIBKERNELDIR)/libkernel.a: prepare-obj-folder
 	@cd $(OBJDIR) && \
@@ -97,7 +100,7 @@ app: $(APPLDIR) prepare-obj-folder
 	@cd $(OBJDIR) && \
 	make module_cfg.h && \
 	make -j8 && \
-	cp app $(PWD)/app # && cp app $(PWD)/app-$(subst /,,$(app))
+	cp app $(WSPDIR)/app # && cp app $(WSPDIR)/app-$(subst /,,$(app))
 
 endif
 

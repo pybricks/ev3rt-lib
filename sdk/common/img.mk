@@ -212,9 +212,30 @@ ifdef APPLDIRS
 endif
 
 #
-# Include the common Makefile of an EV3RT project
+# Common EV3RT Paths
 #
-include ../common/Makefile.prj.common
+EV3RT_SDK_COM_DIR := $(EV3RT_BASE_DIR)/sdk/common
+INCLUDES += -I$(EV3RT_SDK_COM_DIR)
+
+#
+# EV3RT C Language API
+#
+EV3RT_SDK_API_DIR := $(EV3RT_BASE_DIR)/sdk/common/ev3api
+APPL_DIRS += $(EV3RT_SDK_API_DIR)/src
+INCLUDES += -I$(EV3RT_SDK_API_DIR) -I$(EV3RT_SDK_API_DIR)/include
+include $(EV3RT_SDK_API_DIR)/Makefile
+
+#
+# Static libraries
+#
+EV3RT_SDK_LIB_DIR := $(EV3RT_BASE_DIR)/sdk/common/library
+
+#
+# Add include/ and src/ under application directory to search path
+#
+INCLUDES += $(foreach dir,$(shell find $(APPLDIRS) -type d -name include),-I$(dir))
+APPL_DIRS += $(foreach dir,$(shell find $(APPLDIRS) -type d -name src),$(dir))
+
 
 #
 # For EV3RT
