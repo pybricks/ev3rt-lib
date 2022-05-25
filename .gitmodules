@@ -7,6 +7,3 @@
 [submodule "modules/btstack"]
 	path = modules/btstack
 	url = https://github.com/ev3rt-git/btstack.git
-[submodule "sdk"]
-	path = sdk
-	url = https://github.com/ev3rt-git/ev3rt-hrp3-sdk.git
