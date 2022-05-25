@@ -29,6 +29,7 @@
 
 # System image
 uImage
+hrp
 
 # Build directories
 OBJ/
