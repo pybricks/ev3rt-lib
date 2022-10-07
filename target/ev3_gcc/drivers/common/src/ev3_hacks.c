@@ -197,7 +197,7 @@ int hrtimer_cancel(struct hrtimer *timer) {
 //	return 0;
 //}
 
-int puts(const char *s) {
-    printf("%s", s);
-    return 0;
-}
+// int puts(const char *s) {
+//     printf("%s", s);
+//     return 0;
+// }
