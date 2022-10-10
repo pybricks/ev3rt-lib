@@ -98,7 +98,7 @@ void ev3_main_task(intptr_t exinf) {
 
     // Pause the application when using standalone mode
 #if !defined(BUILD_LOADER)
-	platform_pause_application(true);
+	platform_pause_application(false);
 #endif
 
 	is_initialized = true;

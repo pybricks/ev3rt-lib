@@ -170,10 +170,6 @@ void initialize_console_dri() {
 	 */
 	console_menu_perform_action(CONSOLE_MENU_ACT_RESET);
 
-	/**
-	 * Active by default
-	 */
-	SVC_PERROR(set_flg(console_button_flag, 1 << BRICK_BUTTON_BACK));
 }
 
 /**
