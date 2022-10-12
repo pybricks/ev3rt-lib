@@ -1,25 +1,31 @@
 # ev3rt-hrp3
-RTOS for Mindstorms EV3 w/ TOPPERS/HRP3 Kernel
+RTOS for Mindstorms EV3 w/ TOPPERS/HRP3 Kernel.
+
+It can be used independently or with [Pybricks](https://github.com/pybricks/pybricks-micropython).
+
+# Prerequisites
+
+```
+sudo apt install ruby u-boot-tools gcc-arm-none-eabi
+sudo gem install shell
+```
+
+Prepare a microSD card (16 GB or less) and format it as a single FAT32 partition.
 
 # Usage
 
+
+
 ```bash
-git clone https://github.com/ev3rt-git/ev3rt-hrp3
-cd ev3rt-hrp3
-git submodule init
-git submodule update
+# Clone.
+git clone https://github.com/pybricks/ev3rt-lib.git
+cd ev3rt-lib
 
-# Build loader uImage
-cd ev3rt-hrp3/sdk/firmware
-make img=loader
+# Build uImage. This builds the helloev3 example.
+make -C sdk/workspace/ img=helloev3
 
-# Build helloev3 app
-cd ev3rt-hrp3/sdk/workspace
-make app=helloev3
+# Copy to root of microSD card, e.g:
+cp sdk/workspace/uImage /media/user_name/disk_name/uImage
+
+# Insert microSD card and run!
 ```
-
-# Build status
-
-Status               | Platform
---------------       | ------ 
-[![Build Status](https://travis-ci.org/ev3rt-git/ev3rt-hrp3.svg?branch=master)](https://travis-ci.org/ev3rt-git/ev3rt-hrp3) | Ubuntu 14.04
